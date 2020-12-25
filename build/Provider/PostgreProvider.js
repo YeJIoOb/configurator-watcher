@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PostgreProvider = void 0;
 const back_js_postgres_1 = require("back-js-postgres");
 const Provider_1 = require("./Provider");
 class PostgreProvider extends Provider_1.Provider {

@@ -1,6 +1,7 @@
 
 
 export interface IProvider {
-    loadConfigure(): Object;
-    setUpdateConfigure(func: () => void): void;
+  loadConfigure(): Object;
+  registerConfigurator?(): void;
+  setUpdateConfigure(func: () => void): void;
 }

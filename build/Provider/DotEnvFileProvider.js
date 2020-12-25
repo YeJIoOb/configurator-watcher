@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DotEnvFileProvider = void 0;
 const FileProvider_1 = require("./FileProvider");
 const fs = require("fs");
 // src from dotenv

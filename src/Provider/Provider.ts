@@ -7,4 +7,5 @@ export abstract class Provider implements IProvider {
     setUpdateConfigure(update) {
         this.updateConfigure = update;
     }
+    registerConfigurator?(): void;
 }

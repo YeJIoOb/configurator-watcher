@@ -1,13 +1,15 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Configurator = exports.DefaultTypeParser = void 0;
 exports.DefaultTypeParser = {
     string: (value) => value,
     integer: (value, defaultValue) => {
@@ -50,6 +52,11 @@ class Configurator {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.updateConfigure();
             this._uInterval = setInterval(() => this.updateConfigure(), this._config.interval || 5e3);
+            if (typeof this.provider.registerConfigurator === 'function' &&
+                this._config.haveToRegister &&
+                typeof this._config.intervalRegister !== 'undefined') {
+                this._urInterval = setInterval(() => this.provider.registerConfigurator(), this._config.intervalRegister || 5e3);
+            }
         });
     }
     updateConfigure() {

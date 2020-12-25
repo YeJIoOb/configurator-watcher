@@ -4,9 +4,11 @@ export interface ICOnfiguratorOptions<P> {
     provider: P;
     interval?: number;
     parser?: IParser;
+    haveToRegister?: boolean;
+    intervalRegister?: number;
 }
 
-interface IParser {
+export interface IParser {
     [key: string]: (value: string, defaultValue?: any) => any;
 }
 
@@ -43,12 +45,13 @@ export const DefaultTypeParser = {
 }
 
 export class Configurator<T extends IParser, P extends IProvider> {
-    private _uInterval: NodeJS.Timer;
+    protected _uInterval: NodeJS.Timer;
+    protected _urInterval: NodeJS.Timer;
     public config: Object;
     public lastDateConfig: Date;
-    private parser: T;
-    private provider: P;
-    constructor(private _config: ICOnfiguratorOptions<P>) {
+    protected parser: T;
+    protected provider: P;
+    constructor(protected _config: ICOnfiguratorOptions<P>) {
         this.parser = <T>(_config.parser || DefaultTypeParser);
         this.provider = this._config.provider;
         this.provider.setUpdateConfigure(() => this.updateConfigure());
@@ -56,6 +59,13 @@ export class Configurator<T extends IParser, P extends IProvider> {
     async start() {
         await this.updateConfigure();
         this._uInterval = setInterval(() => this.updateConfigure(), this._config.interval || 5e3);
+        if (
+            typeof this.provider.registerConfigurator === 'function' &&
+            this._config.haveToRegister &&
+            typeof this._config.intervalRegister !== 'undefined'
+        ) {
+            this._urInterval = setInterval(() => this.provider.registerConfigurator(), this._config.intervalRegister || 5e3);
+        }
     }
     private async updateConfigure() {
         let dataConfig: Object = this.provider.loadConfigure();

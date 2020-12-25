@@ -47,7 +47,7 @@ export class DotEnvFileProvider extends FileProvider {
             }
 
             // specifying an encoding returns a string instead of a buffer
-            fs.readFile(path, { encoding: encoding }, (err, data) => {
+            fs.readFile(path, { encoding: (encoding as null) }, (err, data) => {
                 if (err) reject(err);
                 try {
                     var parsedObj = parse(data)
