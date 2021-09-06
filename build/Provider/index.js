@@ -11,7 +11,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./IProvider"), exports);
-__exportStar(require("./PostgreProvider"), exports);
 __exportStar(require("./Provider"), exports);
 __exportStar(require("./FileProvider"), exports);
 __exportStar(require("./DotEnvFileProvider"), exports);
