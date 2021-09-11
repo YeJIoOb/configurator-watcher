@@ -8,7 +8,16 @@
       "emitDecoratorMetadata" :true,
       "allowJs": false,
       "declaration": true,
-      "outDir": "./build/",
+      "outDir": "./lib/",
       "rootDir": "./src/"
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "package.json"
+  ],
+  "exclude": [
+    "test/**/*.ts",
+    "**/*.spec.ts",
+    "./lib/**/*"
+  ]
 }
