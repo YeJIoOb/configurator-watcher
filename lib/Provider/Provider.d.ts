@@ -1,10 +1,13 @@
-import { IProvider } from ".";
+import { IProvider, IProviderOptions } from ".";
 import { Optional } from "../interfaces";
 export declare abstract class Provider<O extends {
-    [key: string]: unknown;
+    [key: string]: any;
 }> implements IProvider<O> {
-    updateConfigure: (...args: unknown[]) => void;
+    options?: IProviderOptions;
+    constructor(options?: IProviderOptions);
+    updateConfigure: (...args: any[]) => void;
     abstract loadConfigure(): Optional<O> | Promise<Optional<O>>;
-    setUpdateConfigure(update: (...args: unknown[]) => void): void;
+    setUpdateConfigure(update: (...args: any[]) => void): void;
     registerConfigurator?(): void;
+    stopWatch?(): void;
 }

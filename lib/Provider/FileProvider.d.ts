@@ -1,11 +1,14 @@
+import { IProviderOptions } from '.';
 import { Provider } from './Provider';
-export interface IFileProviderOptions {
+export interface IFileProviderOptions extends IProviderOptions {
     path: string;
+    watch?: boolean;
     encoding?: string;
 }
 export declare abstract class FileProvider<O extends {
-    [key: string]: unknown;
+    [key: string]: any;
 }> extends Provider<O> {
-    protected options: IFileProviderOptions;
+    options: IFileProviderOptions;
     constructor(options: IFileProviderOptions);
+    stopWatch(): void;
 }

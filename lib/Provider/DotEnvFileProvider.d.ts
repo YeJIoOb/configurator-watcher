@@ -1,9 +1,9 @@
 import { FileProvider } from "./FileProvider";
 import { Optional } from "../interfaces";
 export declare class DotEnvFileProvider<O extends {
-    [key: string]: unknown;
+    [key: string]: any;
 } = {
-    [key: string]: unknown;
+    [key: string]: any;
 }> extends FileProvider<O> {
     loadConfigure(): Promise<Optional<O>>;
 }
