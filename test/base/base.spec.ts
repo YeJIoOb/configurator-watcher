@@ -8,19 +8,6 @@ import * as fs from 'fs';
 import { expect } from 'chai';
 
 export class MyTypeParser extends DefaultTypeParser {
-  array(value: unknown) {
-    if (value instanceof Array) {
-      return value;
-    } else if (typeof value === 'string') {
-      try {
-        return JSON.parse(value);
-      } catch (err) {
-        if (value.includes(',')) {
-          return value.split(',');
-        }
-      }
-    }
-  }
 }
 
 interface ConfigO {
@@ -28,6 +15,7 @@ interface ConfigO {
   MY_ARRAY: number[];
   STR_ARRAY: string[];
   SPOON: string;
+  FOO: { bar: number };
 }
 
 const w8 = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -54,7 +42,7 @@ describe("Test not throw error", () => {
     await config.start();
   })
 
-  after(async() => {
+  after(async () => {
     fs.writeFileSync('./test/base/.env', initialDotEnvFile);
     config.stopWatch();
   })
@@ -65,12 +53,12 @@ describe("Test not throw error", () => {
   });
 
   it("MY_ARRAY field must be [1, 2, 3, 4]", async () => {
-    const myArray = config.getConfigValue("MY_ARRAY", "array");
+    const myArray = config.getConfigValue("MY_ARRAY", "numArray");
     expect(myArray).to.deep.eq([1, 2, 3, 4]);
   });
 
   it(`STR_ARRAY field must be ["foo", "bar"]`, async () => {
-    const strArray = config.getConfigValue("STR_ARRAY", "array");
+    const strArray = config.getConfigValue("STR_ARRAY", "strArray");
     expect(strArray).to.deep.eq(["foo", "bar"]);
   });
 

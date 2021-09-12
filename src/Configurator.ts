@@ -1,5 +1,4 @@
 import { EventEmitter } from 'stream';
-import { Optional, OptionalKeysBool } from './interfaces';
 import { DefaultTypeParser, IParser } from './Parser';
 import { IProvider } from './Provider'
 
@@ -7,11 +6,31 @@ export interface IConfiguratorOptions<O extends { [key: string]: unknown } = { [
   providers: P[];
   watchProviders?: boolean;
   watchInterval?: number;
-  parser?: IParser;
+  parser?: DefaultTypeParser;
 }
 
 export declare interface Configurator {
   on(event: 'error', listener: (err) => void): this;
+}
+
+export declare interface Configurator<
+  O extends { [key: string]: any } = { [key: string]: any },
+  T extends IParser = IParser,
+  P extends IProvider<O> = IProvider<O>
+  > {
+  getConfigValue<
+    Tk,
+    OKey extends keyof O = keyof O,
+    TKey extends keyof T = keyof T
+  >(configName: OKey, type: TKey, defaultValue?: Tk): Tk;
+  getConfigValue<
+    OKey extends keyof O = keyof O,
+    OType = O[OKey],
+    TKey extends keyof T = keyof T,
+    TR extends (...args) => any = T[TKey],
+    TRr = ReturnType<TR>,
+    Tk = OType & TRr
+  >(configName: OKey, type: TKey, defaultValue?: Tk): Tk;
 }
 
 export class Configurator<
@@ -27,7 +46,7 @@ export class Configurator<
 
   constructor(protected _config: IConfiguratorOptions<O, P>) {
     super();
-    this.parser = <T>(_config.parser || new DefaultTypeParser());
+    this.parser = <T>(_config.parser || new DefaultTypeParser() as any);
     this.providers = this._config.providers;
     for (const provider of this.providers) {
       provider.setUpdateConfigure(() => this.updateConfigure());
@@ -74,7 +93,14 @@ export class Configurator<
     }
   }
 
-  public getConfigValue<Tk>(configName: keyof O, type: keyof T, defaultValue?: Tk): Tk {
+  public getConfigValue<
+    OKey extends keyof O = keyof O,
+    OType = O[OKey],
+    TKey extends keyof T = keyof T,
+    TR extends (...args) => any = T[TKey],
+    TRr = ReturnType<TR>,
+    Tk = OType & TRr
+  >(configName: OKey, type: TKey, defaultValue?: Tk): Tk {
     return this.parser[String(type)](this.config[configName], defaultValue);
   }
 }

@@ -1,10 +1,9 @@
 export declare type IParseFunc<T> = (value: unknown, defaultValue?: T) => T;
-export interface IParser {
-    string: IParseFunc<string>;
-    integer: IParseFunc<number>;
-    int: IParseFunc<number>;
-    float: IParseFunc<number>;
-    bool: IParseFunc<boolean>;
+export declare type IParser = {
+    [string: string]: IParseFunc<any>;
+};
+export declare interface DefaultTypeParser {
+    [key: string]: IParseFunc<any>;
 }
 export declare class DefaultTypeParser implements IParser {
     string(value: unknown): string;
@@ -12,4 +11,7 @@ export declare class DefaultTypeParser implements IParser {
     int(value: unknown, defaultValue?: number): number;
     float(value: unknown, defaultValue?: number): number;
     bool(value: unknown, defaultValue?: boolean): boolean;
+    strArray(value: unknown): Array<string>;
+    numArray(value: unknown): Array<number>;
+    obj<T>(value: unknown): T;
 }

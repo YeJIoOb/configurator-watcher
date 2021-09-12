@@ -1,18 +1,19 @@
 
 export type IParseFunc<T> = (value: unknown, defaultValue?: T) => T;
 
-export interface IParser {
-  string: IParseFunc<string>;
-  integer: IParseFunc<number>;
-  int: IParseFunc<number>;
-  float: IParseFunc<number>;
-  bool: IParseFunc<boolean>;
+export type IParser = {
+  [string: string]: IParseFunc<any>;
 }
+
+export declare interface DefaultTypeParser {
+  [key: string]: IParseFunc<any>;
+}
+
 
 export class DefaultTypeParser implements IParser {
   string(value: unknown): string {
     if (typeof value === 'string') {
-      return value;
+      return value; ``
     } else if (value instanceof Object) {
       return JSON.stringify(value);
     } else {
@@ -53,6 +54,39 @@ export class DefaultTypeParser implements IParser {
         return false;
       default:
         throw new Error(`cannot cast "${value}" to boolean (${value})`);
+    }
+  }
+  strArray(value: unknown): Array<string> {
+    if (value instanceof Array) {
+      return value;
+    } else if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (err) {
+        if (value.includes(',')) {
+          return value.split(',');
+        }
+      }
+    }
+  }
+  numArray(value: unknown): Array<number> {
+    if (value instanceof Array) {
+      return value;
+    } else if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (err) {
+        if (value.includes(',')) {
+          return value.split(',').map(a => Number(a));
+        }
+      }
+    }
+  }
+  obj<T>(value: unknown): T {
+    try {
+      return JSON.parse(value as string);
+    } catch (err) {
+      return {} as T;
     }
   }
 }
