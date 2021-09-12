@@ -30,12 +30,12 @@ function parse<T>(src: Buffer): T {
   return obj
 }
 
-export class DotEnvFileProvider<O extends { [key: string]: unknown } = { [key: string]: unknown }> extends FileProvider<O> {
+export class DotEnvFileProvider<O extends { [key: string]: any } = { [key: string]: any }> extends FileProvider<O> {
   loadConfigure(): Promise<Optional<O>> {
     return new Promise((resolve, reject) => {
       // path src from dotenv
-      var path = '.env'
-      var encoding = 'utf8'
+      let path = '.env'
+      let encoding = 'utf8'
       const { options } = this;
 
       if (options) {
