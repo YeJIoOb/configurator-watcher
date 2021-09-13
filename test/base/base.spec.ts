@@ -7,7 +7,12 @@ import {
 import * as fs from 'fs';
 import { expect } from 'chai';
 
+interface IObj { }
+
 export class MyTypeParser extends DefaultTypeParser {
+  myParse(value: unknown, defaultValue?: IObj) {
+    return {} as IObj;
+  }
 }
 
 interface ConfigO {

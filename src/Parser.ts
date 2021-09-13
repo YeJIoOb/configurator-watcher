@@ -1,14 +1,15 @@
+export interface IParser {
+  string: IParseFunc<string>;
+  integer: IParseFunc<number>;
+  int: IParseFunc<number>;
+  float: IParseFunc<number>;
+  bool: IParseFunc<boolean>;
+  strArray: IParseFunc<Array<string>>;
+  numArray: IParseFunc<Array<number>>;
+  obj: <T>(value: unknown, defaultValue?: T) => T;
+}
 
 export type IParseFunc<T> = (value: unknown, defaultValue?: T) => T;
-
-export type IParser = {
-  [string: string]: IParseFunc<any>;
-}
-
-export declare interface DefaultTypeParser {
-  [key: string]: IParseFunc<any>;
-}
-
 
 export class DefaultTypeParser implements IParser {
   string(value: unknown): string {

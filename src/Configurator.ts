@@ -1,12 +1,13 @@
 import { EventEmitter } from 'stream';
+import { IParseFunc } from '.';
 import { DefaultTypeParser, IParser } from './Parser';
 import { IProvider } from './Provider'
 
-export interface IConfiguratorOptions<O extends { [key: string]: unknown } = { [key: string]: unknown }, P extends IProvider<O> = IProvider<O>> {
+export interface IConfiguratorOptions<O extends { [key: string]: any } = { [key: string]: any }, P extends IProvider<O> = IProvider<O>> {
   providers: P[];
   watchProviders?: boolean;
   watchInterval?: number;
-  parser?: DefaultTypeParser;
+  parser?: IParser;
 }
 
 export declare interface Configurator {
@@ -19,17 +20,17 @@ export declare interface Configurator<
   P extends IProvider<O> = IProvider<O>
   > {
   getConfigValue<
-    Tk,
-    OKey extends keyof O = keyof O,
-    TKey extends keyof T = keyof T
-  >(configName: OKey, type: TKey, defaultValue?: Tk): Tk;
-  getConfigValue<
     OKey extends keyof O = keyof O,
     OType = O[OKey],
     TKey extends keyof T = keyof T,
-    TR extends (...args) => any = T[TKey],
+    TR extends IParseFunc<any> = IParser[keyof IParser],
     TRr = ReturnType<TR>,
     Tk = OType & TRr
+  >(configName: OKey, type: TKey, defaultValue?: Tk): Tk;
+  getConfigValue<
+    Tk,
+    OKey extends keyof O = keyof O,
+    TKey extends keyof T = keyof T
   >(configName: OKey, type: TKey, defaultValue?: Tk): Tk;
 }
 
@@ -96,8 +97,8 @@ export class Configurator<
   public getConfigValue<
     OKey extends keyof O = keyof O,
     OType = O[OKey],
-    TKey extends keyof T = keyof T,
-    TR extends (...args) => any = T[TKey],
+    TKey extends keyof T = keyof IParser,
+    TR extends IParseFunc<any> = IParser[keyof IParser],
     TRr = ReturnType<TR>,
     Tk = OType & TRr
   >(configName: OKey, type: TKey, defaultValue?: Tk): Tk {
