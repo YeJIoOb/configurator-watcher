@@ -12,7 +12,10 @@ export interface IParser {
 export type IParseFunc<T> = (value: unknown, defaultValue?: T) => T;
 
 export class DefaultTypeParser implements IParser {
-  string(value: unknown): string {
+  string(value: unknown, defaultValue?: string): string {
+    if(typeof value === 'undefined' && typeof defaultValue === 'string') {
+      return defaultValue;
+    }
     if (typeof value === 'string') {
       return value; ``
     } else if (value instanceof Object) {
@@ -57,7 +60,10 @@ export class DefaultTypeParser implements IParser {
         throw new Error(`cannot cast "${value}" to boolean (${value})`);
     }
   }
-  strArray(value: unknown): Array<string> {
+  strArray(value: unknown, defaultValue?: Array<string>): Array<string> {
+    if(typeof value === 'undefined' && defaultValue instanceof Array && defaultValue.every(el => typeof el === 'string')) {
+      return defaultValue;
+    }
     if (value instanceof Array) {
       return value;
     } else if (typeof value === 'string') {
@@ -70,7 +76,10 @@ export class DefaultTypeParser implements IParser {
       }
     }
   }
-  numArray(value: unknown): Array<number> {
+  numArray(value: unknown, defaultValue?: Array<number>): Array<number> {
+    if(typeof value === 'undefined' && defaultValue instanceof Array && defaultValue.every(el => typeof el === 'number')) {
+      return defaultValue;
+    }
     if (value instanceof Array) {
       return value;
     } else if (typeof value === 'string') {

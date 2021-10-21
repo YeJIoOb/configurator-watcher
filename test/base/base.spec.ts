@@ -30,6 +30,7 @@ describe("Test not throw error", () => {
   let initialDotEnvFile: Buffer;
   before(async () => {
     initialDotEnvFile = fs.readFileSync('./test/base/.env');
+    console.log('initialDotEnvFile', initialDotEnvFile)
     process.env['SPOON'] = "not exists"
     config = new Configurator<
       ConfigO,
